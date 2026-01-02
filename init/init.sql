@@ -25,3 +25,9 @@ CREATE TABLE pb_stats (
 
     PRIMARY KEY (hour, region)
 );
+
+DROP TABLE IF EXISTS permission;
+CREATE TABLE permission (
+    account VARCHAR(50) PRIMARY KEY,
+    permissions TEXT NOT NULL
+);
