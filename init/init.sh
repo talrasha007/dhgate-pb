@@ -1,0 +1,1 @@
+npx wrangler d1 execute dhgate_pb --local --file ./init/init.sql
