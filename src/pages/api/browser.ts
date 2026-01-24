@@ -28,7 +28,9 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
 }
 
 async function connectToBrowserWorker(endpoint: BrowserWorker) {
-  return await puppeteer.connect(endpoint, await getRandomSession(endpoint)).catch(async () => await puppeteer.launch(endpoint));
+  return await puppeteer
+    .connect(endpoint, await getRandomSession(endpoint))
+    .catch(async () => await puppeteer.launch(endpoint, { keep_alive: 600 * 1000 }));
 }
 
 // Pick random free session
