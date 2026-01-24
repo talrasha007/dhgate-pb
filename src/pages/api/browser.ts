@@ -1,5 +1,5 @@
-import puppeteer from '@cloudflare/puppeteer';
-import type { Browser, BrowserWorker } from '@cloudflare/puppeteer';
+import puppeteer, { KnownDevices } from '@cloudflare/puppeteer';
+import type { BrowserWorker, Metrics } from '@cloudflare/puppeteer';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER } } } }) => {
@@ -27,6 +27,81 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
   await browser.disconnect();
 
   return new Response(html);
+}
+
+type DeviceName = keyof typeof KnownDevices;
+
+type BrowserRequestOptions = {
+  url: string;
+  ua?: string;
+  device?: DeviceName;
+  proxy?: {
+    host: string;
+    username?: string;
+    password?: string;
+  },
+  click?: string;
+  prefix?: string;
+  returnMetrics?: boolean;
+  returnHtml?: boolean;
+};
+
+type BrowserResponse = {
+  metrics?: Metrics;
+  html?: string;
+  matches?: string[];
+}
+
+export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBROWSER } } } }) => {
+  const ret = {} as BrowserResponse;
+
+  const opt = await request.json<BrowserRequestOptions>();
+
+  const browser  = await connectToBrowserWorker(MYBROWSER);
+  const context = await browser.createBrowserContext({ proxyServer: opt.proxy?.host });
+  const page = await context.newPage();
+
+  if (opt.proxy?.username && opt.proxy?.password) {
+    await page.authenticate({
+      username: opt.proxy.username,
+      password: opt.proxy.password,
+    });
+  }
+
+  if (opt.prefix) {
+    ret.matches = [];
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      const u = req.url();
+      if (u.startsWith(opt.prefix!)) { ret.matches!.push(u); }
+      req.continue();
+    });
+  }
+
+  if (opt.device) {
+    const device = KnownDevices[opt.device];
+    device && await page.emulate(device);
+  }
+
+  if (opt.ua) {
+    await page.setUserAgent(opt.ua);
+  }
+
+  const resp = await page.goto(opt.url);
+  if (opt.returnMetrics) { ret.metrics = await page.metrics(); }
+  if (opt.returnHtml) { ret.html = await resp?.text(); }
+
+  if (opt.click) {
+    await page.click(opt.click);
+    // wait for network to be idle
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  }
+
+  await page.close();
+  await context.close();
+  await browser.disconnect();
+
+  return Response.json(ret);
 }
 
 async function connectToBrowserWorker(endpoint: BrowserWorker) {
