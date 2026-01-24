@@ -73,6 +73,7 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
     await page.setRequestInterception(true);
     page.on('request', (req) => {
       const u = req.url();
+      // console.log('Request:', u);
       if (u.startsWith(opt.prefix!)) { ret.matches!.push(u); }
       req.continue();
     });
@@ -87,11 +88,12 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
     await page.setUserAgent(opt.ua);
   }
 
-  const resp = await page.goto(opt.url);
+  const resp = await page.goto(opt.url, { waitUntil: "networkidle2" });
   if (opt.returnMetrics) { ret.metrics = await page.metrics(); }
   if (opt.returnHtml) { ret.html = await resp?.text(); }
 
   if (opt.click) {
+    // console.log('    Clicking on:', opt.click);
     await page.click(opt.click);
     // wait for network to be idle
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
