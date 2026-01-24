@@ -19,9 +19,9 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
     });
   }
 
-  await page.goto(uri);
+  const resp = await page.goto(uri);
   // const metrics = await page.metrics();
-  const html = await page.evaluate(() => document.documentElement.innerHTML);
+  const html = await resp?.text();
   await page.close();
   await context.close();
   await browser.disconnect();
