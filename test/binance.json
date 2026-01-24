@@ -1,0 +1,8 @@
+{
+  "url": "https://www.bmwweb.academy/join?ref=HU3407",
+  "proxy": {
+    "url": "http://127.0.0.1:19828"
+  },
+  "device": "iPhone X",
+  "returnMetrics": true
+}
