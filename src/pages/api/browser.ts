@@ -56,6 +56,7 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
   const ret = {} as BrowserResponse;
 
   const opt = await request.json<BrowserRequestOptions>();
+  console.log(JSON.stringify(opt, null, 2));
 
   const browser  = await connectToBrowserWorker(MYBROWSER);
   const context = await browser.createBrowserContext({ proxyServer: opt.proxy?.url });
