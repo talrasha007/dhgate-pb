@@ -3,7 +3,7 @@
   "proxy": {
     "url": "http://127.0.0.1:19828"
   },
-  "device": "iPhone X",
+  "device": "iPhone 15 Pro Max",
   "returnMetrics": true,
   "returnHtml": true
 }
