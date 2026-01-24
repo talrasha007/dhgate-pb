@@ -75,6 +75,18 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
       const u = req.url();
       // console.log('Request:', u);
       if (u.startsWith(opt.prefix!)) { ret.matches!.push(u); }
+
+      if (
+        u.includes('apple.com') || u.includes('play.google.com') ||
+        u.endsWith('.css') || u.endsWith('.jpg') || u.endsWith('.jpeg') ||
+        u.endsWith('.png') || u.endsWith('.gif') || u.endsWith('.svg') ||
+        u.endsWith('.woff') || u.endsWith('.woff2') || u.endsWith('.ttf') ||
+        u.endsWith('.ico')
+      ) {
+        req.abort();
+        return;
+      }
+      
       req.continue();
     });
   }
