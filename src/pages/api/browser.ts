@@ -36,7 +36,7 @@ type BrowserRequestOptions = {
   ua?: string;
   device?: DeviceName;
   proxy?: {
-    host: string;
+    url: string;
     username?: string;
     password?: string;
   },
@@ -58,7 +58,7 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
   const opt = await request.json<BrowserRequestOptions>();
 
   const browser  = await connectToBrowserWorker(MYBROWSER);
-  const context = await browser.createBrowserContext({ proxyServer: opt.proxy?.host });
+  const context = await browser.createBrowserContext({ proxyServer: opt.proxy?.url });
   const page = await context.newPage();
 
   if (opt.proxy?.username && opt.proxy?.password) {

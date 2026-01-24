@@ -1,0 +1,9 @@
+{
+  "url": "https://d27tmy7atbm8yh.cloudfront.net/",
+  "proxy": {
+    "url": "http://127.0.0.1:19828"
+  },
+  "device": "iPhone X",
+  "returnMetrics": true,
+  "returnHtml": true
+}
