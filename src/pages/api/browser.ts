@@ -79,10 +79,7 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
 
       if (
         u.includes('apple.com') || u.includes('play.google.com') ||
-        u.endsWith('.css') || u.endsWith('.jpg') || u.endsWith('.jpeg') ||
-        u.endsWith('.png') || u.endsWith('.gif') || u.endsWith('.svg') ||
-        u.endsWith('.woff') || u.endsWith('.woff2') || u.endsWith('.ttf') ||
-        u.endsWith('.ico')
+        u.endsWith('.css') || u.endsWith('.woff') || u.endsWith('.woff2') || u.endsWith('.ttf')
       ) {
         req.abort();
         return;
