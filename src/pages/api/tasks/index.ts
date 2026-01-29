@@ -16,6 +16,9 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { PB_DB } }
   const tasks = await PB_DB.prepare(sql).all();
 
   if (actived === 'true') {
+    const sql = 'SELECT * FROM task_items WHERE disabled = 0';
+    const activeItems = await PB_DB.prepare(sql).all();
+
     const results = tasks.results
       .filter(task => !task.disabled && task.countries !== '[]')
       .map(task => {
@@ -26,6 +29,18 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { PB_DB } }
           proxy: parseProxy(task.proxy as string),
           send_page_view: !!task.send_page_view,
           use_page_view: !!task.use_page_view,
+          clicks: activeItems.results
+            .filter(item => item.task_id === task.app_id)
+            .map(item => {
+              delete item.id;
+              delete item.task_id;
+              delete item.disabled;
+
+              item.use_impact_return = !!item.use_impact_return;
+              item.use_impact_click = !!item.use_impact_click;
+              item.custom_params = JSON.parse(item.custom_params as string);
+              return item;
+            })
         };
       });
     return Response.json(results);
