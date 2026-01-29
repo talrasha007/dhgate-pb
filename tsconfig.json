@@ -6,6 +6,7 @@
 ],
 "compilerOptions": {
     "types": [
+        "./db.d.ts",
         "./worker-configuration.d.ts",
         "node"
     ]
