@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import { send } from 'node:process';
 
 export const GET: APIRoute = async ({ params, locals: { runtime: { env: { PB_DB } } } }) => {
   const taskSql = 'SELECT * FROM tasks WHERE app_id = ?';
