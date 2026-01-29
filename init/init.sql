@@ -47,6 +47,9 @@ DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks (
     app_id    VARCHAR(50) PRIMARY KEY,
     app_name  VARCHAR(100),
+    icon_url  VARCHAR(255),
+    disabled  BOOLEAN DEFAULT FALSE,
+
     countries JSON,
     proxy     TEXT,
     
@@ -63,6 +66,8 @@ CREATE TABLE tasks (
 DROP TABLE IF EXISTS task_items;
 CREATE TABLE task_items (
     id              VARCHAR(50) PRIMARY KEY,
+    disabled        BOOLEAN DEFAULT FALSE,
+    
     task_id         VARCHAR(50),
     deep_link_value TEXT,
     custom_params   JSON,
