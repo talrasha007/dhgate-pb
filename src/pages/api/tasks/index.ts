@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { PB_DB } }
         delete task.icon_url;
         delete task.disabled;
         return { ...task,
-          countries: JSON.parse(task.countries as string).join(','),
+          countries: JSON.parse(task.countries as string),
           proxy: parseProxy(task.proxy as string),
           send_page_view: !!task.send_page_view,
           use_page_view: !!task.use_page_view,
