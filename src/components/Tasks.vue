@@ -6,11 +6,8 @@ import {
   NButton,
   NCard,
   NEmpty,
-  NList,
-  NListItem,
   NSpace,
   NSpin,
-  NThing,
 } from 'naive-ui';
 
 type Task = PB_DB.Task;
@@ -85,20 +82,21 @@ onMounted(fetchTasks);
       <n-spin :show="loading">
         <n-empty v-if="!loading && !hasTasks" description="暂无任务" />
 
-        <n-list v-else>
-          <n-list-item v-for="task in tasks" :key="task.app_id">
-            <n-thing>
-              <template #avatar>
-                <n-avatar :src="task.icon_url" size="medium">
-                  {{ (task.app_name || '?').slice(0, 1) }}
-                </n-avatar>
-              </template>
-              <template #header>
-                {{ task.app_name || '未命名任务' }}
-              </template>
-            </n-thing>
-          </n-list-item>
-        </n-list>
+        <div v-else class="tasks-grid">
+          <a
+            v-for="task in tasks"
+            :key="task.app_id"
+            class="task-tile"
+            :href="`/tasks/${task.app_id}`"
+          >
+            <n-avatar :src="task.icon_url" size="large" class="task-icon">
+              {{ (task.app_name || '?').slice(0, 1) }}
+            </n-avatar>
+            <div class="task-name">
+              {{ task.app_name || '未命名任务' }}
+            </div>
+          </a>
+        </div>
       </n-spin>
     </n-space>
   </n-card>
@@ -121,5 +119,32 @@ onMounted(fetchTasks);
 .tasks-title {
   font-size: 18px;
   font-weight: 600;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 16px 12px;
+}
+
+.task-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.task-icon {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.task-name {
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 88px;
+  word-break: break-word;
 }
 </style>
