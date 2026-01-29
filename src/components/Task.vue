@@ -15,8 +15,8 @@ import {
   NSpace,
 } from 'naive-ui';
 
-type Task = PB_DB.Tasks;
-type TaskItem = PB_DB.TaskItems;
+type Task = PB_DB.Task;
+type TaskItem = PB_DB.TaskItem;
 type CustomParams = PB_DB.CustomParams;
 
 const props = defineProps<{ id: string }>();
@@ -44,7 +44,7 @@ const form = ref<Task>({
 });
 
 const items = computed({
-  get: () => form.value.clicks ?? [],
+  get: () => (form.value.clicks ?? []) as TaskItem[],
   set: (value: TaskItem[]) => {
     form.value.clicks = value;
   },
@@ -182,7 +182,10 @@ onMounted(fetchTask);
   <n-card class="task-card" content-style="padding: 20px;">
     <div class="task-header">
       <div class="task-title">任务详情</div>
-      <n-button type="primary" :loading="saving" @click="saveTask">保存</n-button>
+      <n-space align="center">
+        <n-button secondary tag="a" href="/">取消</n-button>
+        <n-button type="primary" :loading="saving" @click="saveTask">保存</n-button>
+      </n-space>
     </div>
 
     <n-space vertical size="large">

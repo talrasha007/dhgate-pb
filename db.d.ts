@@ -1,6 +1,6 @@
 
 declare namespace PB_DB {
-  interface Tasks {
+  interface Task {
     app_id: string;
     app_name: string;
     icon_url: string;
@@ -29,7 +29,7 @@ declare namespace PB_DB {
     deep_link_sub10: string;
   }
 
-  interface TaskItems {
+  interface TaskItem {
     id: string;
     disabled: boolean;
     task_id: string;

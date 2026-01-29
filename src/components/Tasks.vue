@@ -13,7 +13,7 @@ import {
   NThing,
 } from 'naive-ui';
 
-type Task = PB_DB.Tasks;
+type Task = PB_DB.Task;
 
 type TaskResponse =
   | Task[]
