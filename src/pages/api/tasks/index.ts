@@ -20,7 +20,7 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { PB_DB } }
     const activeItems = await PB_DB.prepare(sql).all();
 
     const results = tasks.results
-      .filter(task => !task.disabled && task.countries !== '[]')
+      .filter(task => !task.disabled && task.countries !== '[]' && task.click_duration && task.click_ratio)
       .map(task => {
         delete task.icon_url;
         delete task.disabled;
