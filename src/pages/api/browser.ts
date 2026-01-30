@@ -19,6 +19,11 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
     });
   }
 
+  const ua = url.searchParams.get('ua') || undefined;
+  if (ua) {
+    await page.setUserAgent(ua);
+  }
+
   const resp = await page.goto(uri);
   // const metrics = await page.metrics();
   const html = await resp?.text();
