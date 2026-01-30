@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
   await context.close();
   await browser.disconnect();
 
-  return new Response(html);
+  return new Response(html, { headers: resp?.headers() });
 }
 
 type DeviceName = keyof typeof KnownDevices;
