@@ -26,7 +26,12 @@ export const GET: APIRoute = async ({ url, locals: { runtime: { env: { MYBROWSER
   await context.close();
   await browser.disconnect();
 
-  return new Response(html, { headers: resp?.headers() });
+  if (url.searchParams.get('json') === 'true') {
+    const metrics = await page.metrics();
+    return Response.json({ metrics, html, headers: resp?.headers() });
+  } else {
+    return new Response(html, { headers: resp?.headers() });
+  }
 }
 
 type DeviceName = keyof typeof KnownDevices;
