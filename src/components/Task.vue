@@ -73,14 +73,14 @@ const createItem = (): TaskItem => ({
   use_impact_click: false,
 });
 
-const normalizeCountries = (value: string): string[] | string => {
+const normalizeCountries = (value: string): string[] => {
   const trimmed = value.trim();
-  if (!trimmed) return '';
+  if (!trimmed) return [];
   const parts = trimmed
     .split(',')
     .map((part) => part.trim())
     .filter(Boolean);
-  return parts.length > 1 ? parts : parts[0];
+  return parts;
 };
 
 const setCountriesInput = (value: Task['countries']) => {
