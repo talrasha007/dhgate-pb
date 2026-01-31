@@ -14,7 +14,13 @@ export const GET: APIRoute = async ({ params, locals: { runtime: { env: { PB_DB 
     send_page_view: !!task.send_page_view,
     use_page_view: !!task.use_page_view,
     disabled: !!task.disabled,
-    clicks: taskItems.results.map(item => ({ ...item, disabled: !!item.disabled }))
+    clicks: taskItems.results.map(item => ({
+      ...item,
+      disabled: !!item.disabled,
+      use_impact_return: !!item.use_impact_return,
+      use_impact_click: !!item.use_impact_click,
+      custom_params: JSON.parse(item.custom_params as string)
+    }))
   });
 };
 
