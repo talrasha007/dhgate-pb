@@ -48,7 +48,7 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 				<div class="rows" id="headers-rows"></div>
 				<datalist id="ua-suggestions">
-					<option value="Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Mobile/15E148 Safari/604.1"></option>
+					<option value="Mozilla/5.0 (iPhone; CPU iPhone OS 26_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Mobile/15E148 Safari/604.1"></option>
 					<option value="Mozilla/5.0 (Linux; Android 13; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.6045.134 Mobile Safari/537.36"></option>
 					<option value="Mozilla/5.0 (AppleTV11,1; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 AppleTV/17.0"></option>
 					<option value="Mozilla/5.0 (Linux; Android 12; BRAVIA 4K UR3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.6045.134 Safari/537.36"></option>
@@ -266,6 +266,8 @@ import Layout from '../layouts/Layout.astro';
 	const uaSuggestionId = 'ua-suggestions';
 	const paramKeySuggestionId = 'param-key-suggestions';
 	const paramValueSuggestionId = 'param-value-suggestions';
+	const defaultIphoneUA =
+		'Mozilla/5.0 (iPhone; CPU iPhone OS 26_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Mobile/15E148 Safari/604.1';
 
 	function ensureProtocol(raw: string): string {
 		if (!raw) return '';
@@ -394,7 +396,7 @@ import Layout from '../layouts/Layout.astro';
 
 	function init() {
 		// default rows
-		createRow(headersRows, 'User-Agent', '', {
+		createRow(headersRows, 'User-Agent', defaultIphoneUA, {
 			nameKey: 'header-key',
 			nameValue: 'header-value',
 			valueListId: uaSuggestionId,
