@@ -82,3 +82,21 @@ CREATE TABLE task_items (
 );
 
 CREATE INDEX idx_task_items_task_id ON task_items(task_id);
+
+DROP TABLE IF EXISTS app;
+CREATE TABLE app (
+    app_id    VARCHAR(50) PRIMARY KEY,
+    app_name  VARCHAR(100),
+    dev_key   VARCHAR(100)
+);
+
+INSERT INTO app (app_id, app_name, dev_key) VALUES
+    ('com.dhgate.buyermob', 'DHgate', 'wAueXqnTbMD65NFK9TsKS7'),
+    ('id905869418', 'DHgate', 'wAueXqnTbMD65NFK9TsKS7'),
+    ('id1488296980', 'Bybit', '4zHVm78oXAwhdzUHGdMLG5'),
+    ('id1327268470', 'Okx', '72dSCzRabQdYPRkgKNdcDf'),
+    ('id1436799971', 'Binance', 'eLMsxedcvJSiwQHyd362JT'),
+    ('id835599320', 'Pizza Hut', 'XY8Lpakui8g4kBcposRgxA'),
+    ('id1170055821', 'Phone Pe', 'R2PcxTzKKaWVyMakREG6X9'),
+    ('id1294998195', 'Gate IO', 'QVwwgUkb2zTuorMkekmprA'),
+    ('id1537797105', 'Melbet', 'zDyQGBL6mnJ2QDFTjAQT36');
