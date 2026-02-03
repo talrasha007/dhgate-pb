@@ -87,10 +87,10 @@ import Layout from '../layouts/Layout.astro';
       platformPill.classList.toggle('pill-android', appId && !isIos);
 
       iosFields.forEach((el) => {
-        el.style.display = isIos ? 'block' : 'none';
+        el.style.display = isIos ? 'grid' : 'none';
       });
       androidFields.forEach((el) => {
-        el.style.display = appId && !isIos ? 'block' : 'none';
+        el.style.display = appId && !isIos ? 'grid' : 'none';
       });
     };
 
