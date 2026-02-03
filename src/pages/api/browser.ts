@@ -59,6 +59,7 @@ type BrowserRequestOptions = {
 
 type BrowserResponse = {
   metrics?: Metrics;
+  url?:     string;
   headers?: Record<string, string>;
   json?:    any;
   html?:    string;
@@ -116,6 +117,7 @@ export const POST: APIRoute = async ({ request, locals: { runtime: { env: { MYBR
   if (opt.returnHtml) { ret.html = await resp?.text(); }
   if (opt.returnJson) ret.json = await resp?.json();
   if (opt.returnHeaders) ret.headers = resp?.headers();
+  ret.url = resp?.url();
 
   if (opt.click) {
     // console.log('    Clicking on:', opt.click);
