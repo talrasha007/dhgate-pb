@@ -28,6 +28,16 @@ import Layout from '../layouts/Layout.astro';
 				<datalist id="param-key-suggestions">
 					<option value="deep_link_value"></option>
 					<option value="deep_link_sub"></option>
+					<option value="af_xplatform"></option>
+					<option value="af_xplatform_vt_lookback"></option>
+					<option value="md5_idfa"></option>
+					<option value="md5_advertising_id"></option>
+					<option value="md5_imei"></option>
+					<option value="md5_oaid"></option>
+				</datalist>
+				<datalist id="param-value-suggestions">
+					<option value="9f89c84a559f573636a47ff8daed0d33">md5(00000000-0000-0000-0000-000000000000)</option>
+					<option value="d41d8cd98f00b204e9800998ecf8427e">md5(empty string)</option>
 				</datalist>
 			</div>
 
@@ -226,32 +236,43 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <script>
-	const urlInput = document.getElementById('url-input');
-	const loadBtn = document.getElementById('load-btn');
-	const paramsRows = document.getElementById('params-rows');
-	const headersRows = document.getElementById('headers-rows');
-	const addParamBtn = document.getElementById('add-param');
-	const addHeaderBtn = document.getElementById('add-header');
-	const tabs = Array.from(document.querySelectorAll('.tab'));
-	const panels = {
-		params: document.getElementById('params-panel'),
-		headers: document.getElementById('headers-panel'),
+	type RowOptions = {
+		keyListId?: string;
+		valueListId?: string;
+		nameKey?: string;
+		nameValue?: string;
+		readonlyKey?: boolean;
+		dataAttr?: string;
+		disableRemove?: boolean;
 	};
-	const sendBtn = document.getElementById('send-btn');
-	const statusEl = document.getElementById('status');
-	const responseBox = document.getElementById('response-box');
-	const returnHeaders = document.getElementById('return-headers');
-	const returnHtml = document.getElementById('return-html');
+
+	const urlInput = document.getElementById('url-input') as HTMLInputElement;
+	const loadBtn = document.getElementById('load-btn') as HTMLButtonElement;
+	const paramsRows = document.getElementById('params-rows') as HTMLDivElement;
+	const headersRows = document.getElementById('headers-rows') as HTMLDivElement;
+	const addParamBtn = document.getElementById('add-param') as HTMLButtonElement;
+	const addHeaderBtn = document.getElementById('add-header') as HTMLButtonElement;
+	const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.tab'));
+	const panels = {
+		params: document.getElementById('params-panel') as HTMLDivElement,
+		headers: document.getElementById('headers-panel') as HTMLDivElement,
+	};
+	const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+	const statusEl = document.getElementById('status') as HTMLDivElement;
+	const responseBox = document.getElementById('response-box') as HTMLPreElement;
+	const returnHeaders = document.getElementById('return-headers') as HTMLInputElement;
+	const returnHtml = document.getElementById('return-html') as HTMLInputElement;
 
 	const uaSuggestionId = 'ua-suggestions';
 	const paramKeySuggestionId = 'param-key-suggestions';
+	const paramValueSuggestionId = 'param-value-suggestions';
 
-	function ensureProtocol(raw) {
+	function ensureProtocol(raw: string): string {
 		if (!raw) return '';
 		return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
 	}
 
-	function createRow(container, key = '', value = '', opts = {}) {
+	function createRow(container: HTMLElement, key = '', value = '', opts: RowOptions = {}) {
 		const row = document.createElement('div');
 		row.className = 'row';
 
@@ -286,8 +307,8 @@ import Layout from '../layouts/Layout.astro';
 		return { row, keyInput, valueInput };
 	}
 
-	function setUa(value) {
-		const uaRow = headersRows.querySelector('[data-ua="true"] input[name="header-value"]');
+	function setUa(value: string) {
+		const uaRow = headersRows.querySelector<HTMLInputElement>('[data-ua="true"] input[name="header-value"]');
 		if (uaRow) uaRow.value = value;
 	}
 
@@ -297,7 +318,14 @@ import Layout from '../layouts/Layout.astro';
 		try {
 			const u = new URL(normalized);
 			paramsRows.innerHTML = '';
-			u.searchParams.forEach((v, k) => createRow(paramsRows, k, v, { keyListId: paramKeySuggestionId, nameKey: 'param-key', nameValue: 'param-value' }));
+			u.searchParams.forEach((v, k) =>
+				createRow(paramsRows, k, v, {
+					keyListId: paramKeySuggestionId,
+					valueListId: paramValueSuggestionId,
+					nameKey: 'param-key',
+					nameValue: 'param-value',
+				}),
+			);
 			const ua = u.searchParams.get('af_ua');
 			if (ua) setUa(ua);
 		} catch (err) {
@@ -305,17 +333,17 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 
-	function collectRows(container, keyName, valueName) {
-		const entries = [];
+	function collectRows(container: HTMLElement, keyName: string, valueName: string): [string, string][] {
+		const entries: [string, string][] = [];
 		container.querySelectorAll('.row').forEach((row) => {
-			const key = row.querySelector(`input[name="${keyName}"]`)?.value.trim();
-			const val = row.querySelector(`input[name="${valueName}"]`)?.value;
+			const key = row.querySelector<HTMLInputElement>(`input[name="${keyName}"]`)?.value.trim();
+			const val = row.querySelector<HTMLInputElement>(`input[name="${valueName}"]`)?.value;
 			if (key) entries.push([key, val ?? '']);
 		});
 		return entries;
 	}
 
-	function buildUrl() {
+	function buildUrl(): string {
 		const normalized = ensureProtocol(urlInput.value.trim());
 		if (!normalized) throw new Error('URL 不能为空');
 		const u = new URL(normalized);
@@ -324,13 +352,13 @@ import Layout from '../layouts/Layout.astro';
 		return u.toString();
 	}
 
-	async function send() {
+	async function send(): Promise<void> {
 		statusEl.textContent = '发送中...';
 		sendBtn.disabled = true;
 		try {
 			const url = buildUrl();
 			const headerPairs = collectRows(headersRows, 'header-key', 'header-value');
-			const ua = (headerPairs.find(([k]) => k.toLowerCase() === 'user-agent') || [])[1];
+			const ua = headerPairs.find(([k]) => k.toLowerCase() === 'user-agent')?.[1];
 			const payload = {
 				url,
 				ua: ua || undefined,
@@ -348,8 +376,9 @@ import Layout from '../layouts/Layout.astro';
 			const data = await resp.json();
 			responseBox.textContent = JSON.stringify(data, null, 2);
 			statusEl.textContent = '完成';
-		} catch (err) {
-			statusEl.textContent = err.message || '发送失败';
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : '发送失败';
+			statusEl.textContent = message;
 		} finally {
 			sendBtn.disabled = false;
 		}
@@ -365,7 +394,13 @@ import Layout from '../layouts/Layout.astro';
 			disableRemove: true,
 		});
 
-		addParamBtn.onclick = () => createRow(paramsRows, '', '', { keyListId: paramKeySuggestionId, nameKey: 'param-key', nameValue: 'param-value' });
+		addParamBtn.onclick = () =>
+			createRow(paramsRows, '', '', {
+				keyListId: paramKeySuggestionId,
+				valueListId: paramValueSuggestionId,
+				nameKey: 'param-key',
+				nameValue: 'param-value',
+			});
 		addHeaderBtn.onclick = () => createRow(headersRows, '', '', { nameKey: 'header-key', nameValue: 'header-value' });
 
 		loadBtn.onclick = loadParamsFromUrl;
