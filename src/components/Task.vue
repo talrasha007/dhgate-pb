@@ -183,7 +183,7 @@ onMounted(fetchTask);
     <div class="task-header">
       <div class="task-title">任务详情</div>
       <n-space align="center">
-        <n-button secondary tag="a" href="/">取消</n-button>
+        <n-button secondary tag="a" href="/taskman">取消</n-button>
         <n-button type="primary" :loading="saving" @click="saveTask">保存</n-button>
       </n-space>
     </div>
