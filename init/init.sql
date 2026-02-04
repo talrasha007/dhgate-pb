@@ -91,6 +91,7 @@ CREATE TABLE apps (
 );
 
 INSERT INTO apps (app_id, app_name, dev_key) VALUES
+    ('id1359763701', 'Exness', 'trLtuVrbebvUhUPUhCJAXg'),
     ('com.dhgate.buyermob', 'DHgate', 'wAueXqnTbMD65NFK9TsKS7'),
     ('id905869418', 'DHgate', 'wAueXqnTbMD65NFK9TsKS7'),
     ('id1488296980', 'Bybit', '4zHVm78oXAwhdzUHGdMLG5'),
