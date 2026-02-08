@@ -40,6 +40,8 @@ const form = ref<Task>({
   prefix: '',
   click_duration: 0,
   click_ratio: 0,
+  clicks_to_send: 0,
+  clicks_to_clear: 0,
   clicks: [],
 });
 
@@ -249,6 +251,14 @@ onMounted(fetchTask);
 
           <n-form-item label="点击占比">
             <n-input-number v-model:value="form.click_ratio" :min="0" :step="0.01" />
+          </n-form-item>
+
+          <n-form-item label="点击发送数">
+            <n-input-number v-model:value="form.clicks_to_send" :min="0" :step="1" />
+          </n-form-item>
+
+          <n-form-item label="点击清理数">
+            <n-input-number v-model:value="form.clicks_to_clear" :min="0" :step="1" />
           </n-form-item>
 
           <n-divider>任务条目</n-divider>
