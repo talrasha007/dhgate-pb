@@ -17,6 +17,8 @@ declare namespace PB_DB {
 
     click_duration: number;
     click_ratio: number;
+    clicks_to_send: number;
+    clicks_to_clear: number;
 
     clicks: TaskItems[] | undefined;
   }
